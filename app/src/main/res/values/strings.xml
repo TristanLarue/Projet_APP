@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">ProjetSession</string>
+    <string name="agence">Agence Touristique à Montréal</string>
+    <string name="connexion">Connexion</string>
+    <string name="email_domain_com">email@domain.com</string>
+    <string name="mdp">****************</string>
+    <string name="se_connecter">Se connecter</string>
+    <string name="pas_de_compte">Pas de compte ? Inscrivez-vous dès maintenant</string>
+    <string name="nom">Nom</string>
+    <string name="prenom">Prénom</string>
+    <string name="age">Âge</string>
+    <string name="telephone">Téléphone</string>
+    <string name="adresse">Adresse</string>
+    <string name="creer_mon_compte">Créer mon compte</string>
+    <string name="s_inscrire">S\'inscrire</string>
+    <string name="accueil">Accueil</string>
+    <string name="recherche">Recherche</string>
+    <string name="filtres">Filtres</string>
+    <string name="historique">Historique</string>
+    <string name="destination">Destination</string>
+    <string name="type_de_voyage">Type de voyage</string>
+    <string name="date_de_depart">Date de départ</string>
+    <string name="budget">Budget</string>
+    <string name="appliquer">Appliquer</string>
+    <string name="detail_du_voyage">Détail du voyage</string>
+    <string name="activites">Activités incluses :</string>
+    <string name="prix">Prix :</string>
+    <string name="dest">Destination :</string>
+    <string name="duree">Durée :</string>
+    <string name="places_restantes">places restantes</string>
+    <string name="reserver">Réserver maintenant</string>
+    <string name="date">Date :</string>
+    <string name="montant_paye">Montant payé :</string>
+    <string name="annuler">Annuler</string>
+</resources>

@@ -1,0 +1,121 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/agence"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/s_inscrire"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"/>
+
+    <EditText
+        android:id="@+id/nomEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/nom"
+        android:padding="12dp"
+        android:background="@drawable/edit_text_bg"
+        android:textColor="#000000"
+        android:textColorHint="#888888"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/prenomEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/prenom"
+        android:padding="12dp"
+        android:background="@drawable/edit_text_bg"
+        android:textColor="#000000"
+        android:textColorHint="#888888"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/ageEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/age"
+        android:inputType="number"
+        android:padding="12dp"
+        android:background="@drawable/edit_text_bg"
+        android:textColor="#000000"
+        android:textColorHint="#888888"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/telephoneEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/telephone"
+        android:inputType="phone"
+        android:padding="12dp"
+        android:background="@drawable/edit_text_bg"
+        android:textColor="#000000"
+        android:textColorHint="#888888"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/adresseEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/adresse"
+        android:padding="12dp"
+        android:background="@drawable/edit_text_bg"
+        android:textColor="#000000"
+        android:textColorHint="#888888"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/emailEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/email_domain_com"
+        android:inputType="textEmailAddress"
+        android:padding="12dp"
+        android:background="@drawable/edit_text_bg"
+        android:textColor="#000000"
+        android:textColorHint="#888888"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/passwordEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/mdp"
+        android:inputType="textPassword"
+        android:padding="12dp"
+        android:background="@drawable/edit_text_bg"
+        android:textColor="#000000"
+        android:textColorHint="#888888"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/signupButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/creer_mon_compte"
+        style="@style/CustomButtonStyle"
+        android:gravity="center"
+        android:minHeight="48dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp" />
+</LinearLayout>
