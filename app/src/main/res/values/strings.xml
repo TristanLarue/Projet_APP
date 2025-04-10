@@ -32,4 +32,12 @@
     <string name="date">Date :</string>
     <string name="montant_paye">Montant payé :</string>
     <string name="annuler">Annuler</string>
+    <string name="erreur_identifiants_invalides">Identifiants invalides</string>
+    <string name="erreur_reponse_serveur">Erreur serveur</string>
+    <string name="erreur_connexion_reseau">Problème de connexion</string>
+    <string name="erreur_champ_obligatoire">Champ obligatoire</string>
+    <string name="erreur_email_invalide">Email invalide</string>
+    <string name="status_historique">Status: Confirmé</string>
+
+
 </resources>
