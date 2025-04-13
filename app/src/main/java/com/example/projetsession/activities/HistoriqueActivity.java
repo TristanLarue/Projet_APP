@@ -1,64 +1,72 @@
 package com.example.projetsession.activities;
 
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.projetsession.R;
 import com.example.projetsession.dao.ReservationDAO;
+import com.example.projetsession.dao.VoyageDAO;
 import com.example.projetsession.modeles.Reservation;
 import com.example.projetsession.adaptateurs.ReservationAdapter;
-
 import java.util.List;
 
 public class HistoriqueActivity extends AppCompatActivity {
-
-    private RecyclerView historiqueRecyclerView;
-    private ReservationAdapter reservationAdapter;
+    private RecyclerView recyclerView;
+    private ReservationAdapter adapter;
     private ReservationDAO reservationDAO;
-    private String userId = "";
+    private VoyageDAO voyageDAO;
+    private TextView emptyTextView;
+    private ImageButton backButton;
+    private int userId = -1; // Identifiant de l'utilisateur connecté
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historique);
+        recyclerView = findViewById(R.id.historiqueRecyclerView);
+        emptyTextView = findViewById(R.id.emptyTextView);
+        backButton = findViewById(R.id.backButton);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Set up the RecyclerView
-        historiqueRecyclerView = findViewById(R.id.historiqueRecyclerView);
-        historiqueRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // Récupérer l'user_id depuis l'Intent
+        userId = getIntent().getIntExtra("user_id", -1);
 
-        // Get the current userId from SharedPreferences (set during login)
-        SharedPreferences sp = getSharedPreferences("SessionUtilisateur", MODE_PRIVATE);
-        userId = sp.getString("idUtilisateur", "");
-
-        // Retrieve the list of reservations for the current user from the SQLite database
         reservationDAO = new ReservationDAO(this);
-        reservationDAO.open();
-        List<Reservation> reservations = reservationDAO.getReservationsUtilisateur(userId);
-        reservationDAO.close();
+        voyageDAO = new VoyageDAO(this);
 
-        // Set up the adapter with a listener that cancels the reservation when the cancel button is pressed.
-        reservationAdapter = new ReservationAdapter(reservations, new ReservationAdapter.OnReservationClickListener() {
-            @Override
-            public void onReservationClick(Reservation reservation) {
-                // When the cancel button is clicked, cancel the reservation in the database.
-                reservationDAO.open();
-                int rowsAffected = reservationDAO.annulerReservation(reservation.getId());
-                reservationDAO.close();
-                if (rowsAffected > 0) {
+        backButton.setOnClickListener(v -> finish());
+        loadReservations();
+    }
+
+    private void loadReservations() {
+        List<Reservation> reservations = reservationDAO.getReservationsUtilisateur(userId);
+        if (reservations == null || reservations.isEmpty()) {
+            emptyTextView.setVisibility(View.VISIBLE);
+        } else {
+            emptyTextView.setVisibility(View.GONE);
+        }
+        if (adapter == null) {
+            adapter = new ReservationAdapter(reservations);
+            adapter.setVoyageDAO(voyageDAO);
+            adapter.setOnCancelClickListener(reservation -> {
+                boolean cancelled = reservationDAO.annulerReservation(
+                        reservation.getId(), reservation.getDateVoyageId(), reservation.getNbPlaces());
+                if (cancelled) {
                     Toast.makeText(HistoriqueActivity.this, "Réservation annulée", Toast.LENGTH_SHORT).show();
-                    // Remove the reservation from the list and notify the adapter.
-                    reservations.remove(reservation);
-                    reservationAdapter.notifyDataSetChanged();
+                    loadReservations();
                 } else {
                     Toast.makeText(HistoriqueActivity.this, "Erreur lors de l'annulation", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-        historiqueRecyclerView.setAdapter(reservationAdapter);
+            });
+            recyclerView.setAdapter(adapter);
+        } else {
+            adapter.updateList(reservations);
+        }
     }
 }

@@ -1,103 +1,89 @@
 package com.example.projetsession.dao;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
+import com.example.projetsession.modeles.DateVoyage;
 import com.example.projetsession.modeles.Reservation;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import com.example.projetsession.modeles.Voyage;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 public class ReservationDAO {
-    private SQLiteDatabase database;
-    private ReservationDbHelper dbHelper;
-    private SimpleDateFormat dateFormat;
+    private DatabaseHelper dbHelper;
+    private DateVoyageDAO dateVoyageDAO;
 
     public ReservationDAO(Context context) {
-        dbHelper = new ReservationDbHelper(context);
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        dbHelper = new DatabaseHelper(context);
+        dateVoyageDAO = new DateVoyageDAO(context);
     }
 
-    public void open() {
-        database = dbHelper.getWritableDatabase();
+    public long insererReservation(Reservation reservation) {
+        return dbHelper.ajouterReservation(reservation);
     }
 
-    public void close() {
-        dbHelper.close();
+    public List<Reservation> getReservationsUtilisateur(int utilisateurId) {
+        return dbHelper.getReservationsByUtilisateur(utilisateurId);
     }
 
-    public long ajouterReservation(Reservation reservation) {
-        ContentValues values = new ContentValues();
-        values.put(ReservationDbHelper.COLUMN_VOYAGE_ID, reservation.getVoyageId());
-        values.put(ReservationDbHelper.COLUMN_UTILISATEUR_ID, reservation.getUtilisateurId());
-        values.put(ReservationDbHelper.COLUMN_DESTINATION, reservation.getDestination());
-        values.put(ReservationDbHelper.COLUMN_DATE_VOYAGE, dateFormat.format(reservation.getDateVoyage()));
-        values.put(ReservationDbHelper.COLUMN_NOMBRE_PLACES, reservation.getNombrePlaces());
-        values.put(ReservationDbHelper.COLUMN_MONTANT_TOTAL, reservation.getMontantTotal());
-        values.put(ReservationDbHelper.COLUMN_STATUT, reservation.getStatut());
-        values.put(ReservationDbHelper.COLUMN_DATE_RESERVATION, dateFormat.format(new Date()));
-        return database.insert(ReservationDbHelper.TABLE_RESERVATIONS, null, values);
-    }
+    public boolean effectuerReservation(int utilisateurId, int voyageId, int dateVoyageId, int nbPlaces, double prixUnitaire) {
+        List<DateVoyage> dateVoyages = dateVoyageDAO.getDateVoyagesPourVoyage(voyageId);
+        DateVoyage selectedDate = null;
 
-    public List<Reservation> getReservationsUtilisateur(String utilisateurId) {
-        List<Reservation> liste = new ArrayList<>();
-        String selection = ReservationDbHelper.COLUMN_UTILISATEUR_ID + " = ?";
-        String[] selectionArgs = { utilisateurId };
-        Cursor cursor = database.query(
-                ReservationDbHelper.TABLE_RESERVATIONS,
-                null,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                ReservationDbHelper.COLUMN_DATE_VOYAGE + " DESC"
-        );
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                Reservation r = cursorToReservation(cursor);
-                liste.add(r);
-            } while (cursor.moveToNext());
-            cursor.close();
+        for (DateVoyage dv : dateVoyages) {
+            if (dv.getId() == dateVoyageId) {
+                selectedDate = dv;
+                break;
+            }
         }
-        return liste;
-    }
 
-    public int annulerReservation(long reservationId) {
-        ContentValues values = new ContentValues();
-        values.put(ReservationDbHelper.COLUMN_STATUT, "annulée");
-        return database.update(
-                ReservationDbHelper.TABLE_RESERVATIONS,
-                values,
-                ReservationDbHelper.COLUMN_ID + " = ?",
-                new String[]{String.valueOf(reservationId)}
-        );
-    }
+        if (selectedDate == null || selectedDate.getNbPlacesDisponibles() < nbPlaces) {
+            return false;
+        }
 
-    private Reservation cursorToReservation(Cursor cursor) {
+        double montantTotal = prixUnitaire * nbPlaces;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String dateReservation = dateFormat.format(new Date());
+
         Reservation reservation = new Reservation();
-        reservation.setId(cursor.getLong(cursor.getColumnIndexOrThrow(ReservationDbHelper.COLUMN_ID)));
-        reservation.setVoyageId(cursor.getLong(cursor.getColumnIndexOrThrow(ReservationDbHelper.COLUMN_VOYAGE_ID)));
-        reservation.setUtilisateurId(cursor.getString(cursor.getColumnIndexOrThrow(ReservationDbHelper.COLUMN_UTILISATEUR_ID)));
-        reservation.setDestination(cursor.getString(cursor.getColumnIndexOrThrow(ReservationDbHelper.COLUMN_DESTINATION)));
-        try {
-            String dateVoyageStr = cursor.getString(cursor.getColumnIndexOrThrow(ReservationDbHelper.COLUMN_DATE_VOYAGE));
-            Date dateVoyage = dateFormat.parse(dateVoyageStr);
-            reservation.setDateVoyage(dateVoyage);
-            String dateResStr = cursor.getString(cursor.getColumnIndexOrThrow(ReservationDbHelper.COLUMN_DATE_RESERVATION));
-            Date dateReservation = dateFormat.parse(dateResStr);
-            reservation.setDateReservation(dateReservation);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        reservation.setUtilisateurId(utilisateurId);
+        reservation.setVoyageId(voyageId);
+        reservation.setDateVoyageId(dateVoyageId);
+        reservation.setNbPlaces(nbPlaces);
+        reservation.setMontantTotal(montantTotal);
+        reservation.setStatut("confirmée");
+        reservation.setDateReservation(dateReservation);
+
+        long result = dbHelper.ajouterReservation(reservation);
+
+        if (result > 0) {
+            int nouveauNbPlaces = selectedDate.getNbPlacesDisponibles() - nbPlaces;
+            dateVoyageDAO.mettreAJourPlacesDisponibles(dateVoyageId, nouveauNbPlaces);
+            return true;
         }
-        reservation.setNombrePlaces(cursor.getInt(cursor.getColumnIndexOrThrow(ReservationDbHelper.COLUMN_NOMBRE_PLACES)));
-        reservation.setMontantTotal(cursor.getDouble(cursor.getColumnIndexOrThrow(ReservationDbHelper.COLUMN_MONTANT_TOTAL)));
-        reservation.setStatut(cursor.getString(cursor.getColumnIndexOrThrow(ReservationDbHelper.COLUMN_STATUT)));
-        return reservation;
+
+        return false;
+    }
+
+    public boolean annulerReservation(int reservationId, int dateVoyageId, int nbPlaces) {
+        try {
+            DateVoyage dateVoyage = null;
+            for (DateVoyage dv : dateVoyageDAO.getDateVoyagesPourVoyage(0)) {
+                if (dv.getId() == dateVoyageId) {
+                    dateVoyage = dv;
+                    break;
+                }
+            }
+
+            if (dateVoyage != null) {
+                int nouveauNbPlaces = dateVoyage.getNbPlacesDisponibles() + nbPlaces;
+                dateVoyageDAO.mettreAJourPlacesDisponibles(dateVoyageId, nouveauNbPlaces);
+            }
+
+            dbHelper.updateReservationStatut(reservationId, "annulée");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

@@ -30,10 +30,10 @@
             android:name=".activities.AccueilActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.FiltresActivity"
+            android:name=".activities.FiltreActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.VoyageDetailActivity"
+            android:name=".activities.VoyageActivity"
             android:exported="false" />
         <activity
             android:name=".activities.HistoriqueActivity"

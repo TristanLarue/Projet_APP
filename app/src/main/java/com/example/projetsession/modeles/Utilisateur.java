@@ -1,38 +1,33 @@
 package com.example.projetsession.modeles;
 
 public class Utilisateur {
-    private long id;
+    private int id;
     private String nom;
     private String prenom;
-    private String courriel;
+    private String email;
+    private String mdp;
     private int age;
     private String telephone;
     private String adresse;
-    private String motDePasse;
 
-    public Utilisateur() {
-        // Constructeur vide obligatoire (pour JSON ou autre)
-    }
+    public Utilisateur() {}
 
-    public Utilisateur(long id, String nom, String prenom, String courriel, int age,
-                       String telephone, String adresse, String motDePasse) {
+    public Utilisateur(int id, String nom, String prenom, String email, String mdp, int age, String telephone, String adresse) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
-        this.courriel = courriel;
+        this.email = email;
+        this.mdp = mdp;
         this.age = age;
         this.telephone = telephone;
         this.adresse = adresse;
-        this.motDePasse = motDePasse;
     }
 
-    // Getters et Setters
-
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -52,12 +47,20 @@ public class Utilisateur {
         this.prenom = prenom;
     }
 
-    public String getCourriel() {
-        return courriel;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCourriel(String courriel) {
-        this.courriel = courriel;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getMdp() {
+        return mdp;
+    }
+
+    public void setMdp(String mdp) {
+        this.mdp = mdp;
     }
 
     public int getAge() {
@@ -82,13 +85,5 @@ public class Utilisateur {
 
     public void setAdresse(String adresse) {
         this.adresse = adresse;
-    }
-
-    public String getMotDePasse() {
-        return motDePasse;
-    }
-
-    public void setMotDePasse(String motDePasse) {
-        this.motDePasse = motDePasse;
     }
 }

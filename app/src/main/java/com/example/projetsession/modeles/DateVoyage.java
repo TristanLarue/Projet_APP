@@ -1,16 +1,34 @@
 package com.example.projetsession.modeles;
 
 public class DateVoyage {
+    private int id;
+    private int voyageId;
     private String date;
-    private int placesDisponibles;
+    private int nbPlacesDisponibles;
 
-    public DateVoyage() {
-        // Constructeur vide
+    public DateVoyage() {}
+
+    public DateVoyage(int id, int voyageId, String date, int nbPlacesDisponibles) {
+        this.id = id;
+        this.voyageId = voyageId;
+        this.date = date;
+        this.nbPlacesDisponibles = nbPlacesDisponibles;
     }
 
-    public DateVoyage(String date, int placesDisponibles) {
-        this.date = date;
-        this.placesDisponibles = placesDisponibles;
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getVoyageId() {
+        return voyageId;
+    }
+
+    public void setVoyageId(int voyageId) {
+        this.voyageId = voyageId;
     }
 
     public String getDate() {
@@ -21,11 +39,11 @@ public class DateVoyage {
         this.date = date;
     }
 
-    public int getPlacesDisponibles() {
-        return placesDisponibles;
+    public int getNbPlacesDisponibles() {
+        return nbPlacesDisponibles;
     }
 
-    public void setPlacesDisponibles(int placesDisponibles) {
-        this.placesDisponibles = placesDisponibles;
+    public void setNbPlacesDisponibles(int nbPlacesDisponibles) {
+        this.nbPlacesDisponibles = nbPlacesDisponibles;
     }
 }

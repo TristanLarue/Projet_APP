@@ -3,80 +3,86 @@ package com.example.projetsession.adaptateurs;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.projetsession.R;
+import com.example.projetsession.dao.VoyageDAO;
 import com.example.projetsession.modeles.Reservation;
-import java.text.SimpleDateFormat;
+import com.example.projetsession.modeles.Voyage;
 import java.util.List;
-import java.util.Locale;
 
-public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.ReservationViewHolder> {
+public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.ViewHolder> {
 
-    private List<Reservation> listeReservations;
-    private OnReservationClickListener listener;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    private List<Reservation> reservationList;
+    private OnCancelClickListener cancelClickListener;
+    private VoyageDAO voyageDAO; // Pour récupérer les infos du voyage
 
-    public ReservationAdapter(List<Reservation> listeReservations, OnReservationClickListener listener) {
-        this.listeReservations = listeReservations;
-        this.listener = listener;
+    public interface OnCancelClickListener {
+        void onCancelClick(Reservation reservation);
     }
 
-    @NonNull
-    @Override
-    public ReservationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_historique, parent, false);
-        return new ReservationViewHolder(view);
+    public void setOnCancelClickListener(OnCancelClickListener listener) {
+        this.cancelClickListener = listener;
+    }
+
+    public void setVoyageDAO(VoyageDAO voyageDAO) {
+        this.voyageDAO = voyageDAO;
+    }
+
+    public ReservationAdapter(List<Reservation> reservationList) {
+        this.reservationList = reservationList;
+    }
+
+    public void updateList(List<Reservation> list) {
+        reservationList = list;
+        notifyDataSetChanged();
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReservationViewHolder holder, int position) {
-        Reservation reservation = listeReservations.get(position);
-        holder.bind(reservation, listener, dateFormat);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_historique, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        Reservation reservation = reservationList.get(position);
+        // Récupérer la destination à partir du VoyageDAO
+        String destination = "N/A";
+        if (voyageDAO != null) {
+            Voyage voyage = voyageDAO.getVoyageParId(reservation.getVoyageId());
+            if (voyage != null) {
+                destination = voyage.getDestination();
+            }
+        }
+        // Afficher le nom de la destination et le prix avec le nombre de places
+        holder.destinationTextView.setText("Destination: " + destination);
+        holder.dateVoyageTextView.setText("Date: " + reservation.getDateReservation());
+        holder.montantText.setText("Prix: " + reservation.getMontantTotal() + "$ (" + reservation.getNbPlaces() + " places)");
+        holder.statutTextView.setText("Statut: " + reservation.getStatut());
+        holder.cancelButton.setOnClickListener(v -> {
+            if (cancelClickListener != null) {
+                cancelClickListener.onCancelClick(reservation);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return (listeReservations != null) ? listeReservations.size() : 0;
+        return reservationList == null ? 0 : reservationList.size();
     }
 
-    public static class ReservationViewHolder extends RecyclerView.ViewHolder {
-        TextView destinationTextView;
-        TextView dateVoyageTextView;
-        TextView montantTextView;
-        TextView statutTextView;
-
-        public ReservationViewHolder(@NonNull View itemView) {
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView destinationTextView, dateVoyageTextView, montantText, statutTextView;
+        Button cancelButton;
+        public ViewHolder(View itemView) {
             super(itemView);
             destinationTextView = itemView.findViewById(R.id.destinationTextView);
             dateVoyageTextView = itemView.findViewById(R.id.dateVoyageTextView);
-            montantTextView = itemView.findViewById(R.id.montantText);
+            montantText = itemView.findViewById(R.id.montantText);
             statutTextView = itemView.findViewById(R.id.statutTextView);
+            cancelButton = itemView.findViewById(R.id.cancelButton);
         }
-
-        public void bind(final Reservation reservation,
-                         final OnReservationClickListener listener,
-                         final SimpleDateFormat dateFormat) {
-            destinationTextView.setText(reservation.getDestination());
-            if (reservation.getDateVoyage() != null) {
-                dateVoyageTextView.setText(dateFormat.format(reservation.getDateVoyage()));
-            } else {
-                dateVoyageTextView.setText("N/D");
-            }
-            montantTextView.setText("Montant payé: " + String.format("%.2f $", reservation.getMontantTotal()));
-            statutTextView.setText(reservation.getStatut());
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onReservationClick(reservation);
-                }
-            });
-        }
-    }
-
-    public interface OnReservationClickListener {
-        void onReservationClick(Reservation reservation);
     }
 }

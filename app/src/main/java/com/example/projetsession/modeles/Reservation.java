@@ -1,84 +1,67 @@
 package com.example.projetsession.modeles;
 
-import java.util.Date;
-
 public class Reservation {
-    private long id;
-    private long voyageId;
-    private String utilisateurId;
-    private String destination;    // Pratique pour affichage direct
-    private Date dateVoyage;
-    private int nombrePlaces;
+    private int id;
+    private int utilisateurId;
+    private int voyageId;
+    private int dateVoyageId;
+    private int nbPlaces;
     private double montantTotal;
-    private String statut;         // "confirmée" ou "annulée"
-    private Date dateReservation;
+    private String statut;
+    private String dateReservation;
 
-    public Reservation() {
-        // Constructeur vide
-    }
+    public Reservation() {}
 
-    public Reservation(long id, long voyageId, String utilisateurId,
-                       String destination, Date dateVoyage, int nombrePlaces,
-                       double montantTotal, String statut, Date dateReservation) {
+    public Reservation(int id, int utilisateurId, int voyageId, int dateVoyageId, int nbPlaces,
+                       double montantTotal, String statut, String dateReservation) {
         this.id = id;
-        this.voyageId = voyageId;
         this.utilisateurId = utilisateurId;
-        this.destination = destination;
-        this.dateVoyage = dateVoyage;
-        this.nombrePlaces = nombrePlaces;
+        this.voyageId = voyageId;
+        this.dateVoyageId = dateVoyageId;
+        this.nbPlaces = nbPlaces;
         this.montantTotal = montantTotal;
         this.statut = statut;
         this.dateReservation = dateReservation;
     }
 
-    // Getters et Setters
-
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public long getVoyageId() {
-        return voyageId;
-    }
-
-    public void setVoyageId(long voyageId) {
-        this.voyageId = voyageId;
-    }
-
-    public String getUtilisateurId() {
+    public int getUtilisateurId() {
         return utilisateurId;
     }
 
-    public void setUtilisateurId(String utilisateurId) {
+    public void setUtilisateurId(int utilisateurId) {
         this.utilisateurId = utilisateurId;
     }
 
-    public String getDestination() {
-        return destination;
+    public int getVoyageId() {
+        return voyageId;
     }
 
-    public void setDestination(String destination) {
-        this.destination = destination;
+    public void setVoyageId(int voyageId) {
+        this.voyageId = voyageId;
     }
 
-    public Date getDateVoyage() {
-        return dateVoyage;
+    public int getDateVoyageId() {
+        return dateVoyageId;
     }
 
-    public void setDateVoyage(Date dateVoyage) {
-        this.dateVoyage = dateVoyage;
+    public void setDateVoyageId(int dateVoyageId) {
+        this.dateVoyageId = dateVoyageId;
     }
 
-    public int getNombrePlaces() {
-        return nombrePlaces;
+    public int getNbPlaces() {
+        return nbPlaces;
     }
 
-    public void setNombrePlaces(int nombrePlaces) {
-        this.nombrePlaces = nombrePlaces;
+    public void setNbPlaces(int nbPlaces) {
+        this.nbPlaces = nbPlaces;
     }
 
     public double getMontantTotal() {
@@ -97,11 +80,11 @@ public class Reservation {
         this.statut = statut;
     }
 
-    public Date getDateReservation() {
+    public String getDateReservation() {
         return dateReservation;
     }
 
-    public void setDateReservation(Date dateReservation) {
+    public void setDateReservation(String dateReservation) {
         this.dateReservation = dateReservation;
     }
 }

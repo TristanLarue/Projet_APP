@@ -1,70 +1,66 @@
 package com.example.projetsession.adaptateurs;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.projetsession.R;
 import com.example.projetsession.modeles.Voyage;
 import java.util.List;
-
-public class VoyageAdapter extends RecyclerView.Adapter<VoyageAdapter.VoyageViewHolder> {
-
-    private List<Voyage> listeVoyages;
+import com.bumptech.glide.Glide;
+public class VoyageAdapter extends RecyclerView.Adapter<VoyageAdapter.ViewHolder> {
+    private List<Voyage> voyageList;
     private OnItemClickListener listener;
-
-    public VoyageAdapter(List<Voyage> listeVoyages, OnItemClickListener listener) {
-        this.listeVoyages = listeVoyages;
-        this.listener = listener;
-    }
-
-    @NonNull
-    @Override
-    public VoyageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Utiliser ici le layout existant pour l'item de voyage,
-        // par exemple R.layout.item_destination ou R.layout.item_voyage_activity,
-        // assurez-vous qu'il contient au moins destinationTextView et prixTextView.
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_voyage_activity, parent, false);
-        return new VoyageViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull VoyageViewHolder holder, int position) {
-        Voyage voyage = listeVoyages.get(position);
-        holder.bind(voyage, listener);
-    }
-
-    @Override
-    public int getItemCount() {
-        return (listeVoyages != null) ? listeVoyages.size() : 0;
-    }
-
-    public void updateList(List<Voyage> newList) {
-        this.listeVoyages = newList;
-        notifyDataSetChanged();
-    }
-
-    public static class VoyageViewHolder extends RecyclerView.ViewHolder {
-        TextView destinationTextView;
-        TextView prixTextView;
-
-        public VoyageViewHolder(@NonNull View itemView) {
-            super(itemView);
-            destinationTextView = itemView.findViewById(R.id.destinationTextView);
-            prixTextView = itemView.findViewById(R.id.prixTextView);
-        }
-
-        public void bind(final Voyage voyage, final OnItemClickListener listener) {
-            destinationTextView.setText(voyage.getDestination());
-            prixTextView.setText(String.valueOf(voyage.getPrix()) + " $");
-            itemView.setOnClickListener(v -> listener.onItemClick(voyage));
-        }
-    }
-
     public interface OnItemClickListener {
         void onItemClick(Voyage voyage);
+    }
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+    public VoyageAdapter(List<Voyage> voyageList) {
+        this.voyageList = voyageList;
+    }
+    public void updateList(List<Voyage> list){
+        voyageList = list;
+        notifyDataSetChanged();
+    }
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_destination, parent, false);
+        return new ViewHolder(view);
+    }
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position){
+        Voyage voyage = voyageList.get(position);
+        holder.title.setText(voyage.getNomVoyage());
+        holder.summary.setText(voyage.getDescription());
+        holder.price.setText("Prix : " + voyage.getPrix() + "$");
+        Glide.with(holder.image.getContext())
+                .load(voyage.getImageUrl())
+                .placeholder(android.R.drawable.ic_menu_gallery)
+                .error(android.R.drawable.ic_delete)
+                .into(holder.image);
+        holder.itemView.setOnClickListener(v -> {
+            if(listener != null) {
+                listener.onItemClick(voyage);
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount(){
+        return voyageList == null ? 0 : voyageList.size();
+    }
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView title, summary, price;
+        ImageView image;
+        ViewHolder(View itemView){
+            super(itemView);
+            title = itemView.findViewById(R.id.destinationTitle);
+            summary = itemView.findViewById(R.id.destinationSummary);
+            price = itemView.findViewById(R.id.destinationPrice);
+            image = itemView.findViewById(R.id.destinationImage);
+        }
     }
 }

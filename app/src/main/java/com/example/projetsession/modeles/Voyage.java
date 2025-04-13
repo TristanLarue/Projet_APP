@@ -1,47 +1,52 @@
 package com.example.projetsession.modeles;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Voyage {
-    private long id;
-    private String destination;
+    private int id;
+    private String nomVoyage;
     private String description;
     private double prix;
-    private String image;    // Optionnel (URL ou chemin)
-    private String type;     // Aventure, culturel, etc.
-    private List<DateVoyage> dates; // Liste des dates disponibles
+    private String destination;
+    private String imageUrl;
+    private int dureeJours;
+    private String typeDeVoyage;
+    private String activitesIncluses;
+    private List<DateVoyage> dateVoyages;
 
     public Voyage() {
-        // Constructeur vide
+        dateVoyages = new ArrayList<>();
     }
 
-    public Voyage(long id, String destination, String description,
-                  double prix, String image, String type, List<DateVoyage> dates) {
+    public Voyage(int id, String nomVoyage, String description, double prix, String destination,
+                  String imageUrl, int dureeJours, String typeDeVoyage, String activitesIncluses) {
         this.id = id;
-        this.destination = destination;
+        this.nomVoyage = nomVoyage;
         this.description = description;
         this.prix = prix;
-        this.image = image;
-        this.type = type;
-        this.dates = dates;
+        this.destination = destination;
+        this.imageUrl = imageUrl;
+        this.dureeJours = dureeJours;
+        this.typeDeVoyage = typeDeVoyage;
+        this.activitesIncluses = activitesIncluses;
+        this.dateVoyages = new ArrayList<>();
     }
 
-    // Getters et Setters
-
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getDestination() {
-        return destination;
+    public String getNomVoyage() {
+        return nomVoyage;
     }
 
-    public void setDestination(String destination) {
-        this.destination = destination;
+    public void setNomVoyage(String nomVoyage) {
+        this.nomVoyage = nomVoyage;
     }
 
     public String getDescription() {
@@ -60,27 +65,55 @@ public class Voyage {
         this.prix = prix;
     }
 
-    public String getImage() {
-        return image;
+    public String getDestination() {
+        return destination;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setDestination(String destination) {
+        this.destination = destination;
     }
 
-    public String getType() {
-        return type;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public List<DateVoyage> getDates() {
-        return dates;
+    public int getDureeJours() {
+        return dureeJours;
     }
 
-    public void setDates(List<DateVoyage> dates) {
-        this.dates = dates;
+    public void setDureeJours(int dureeJours) {
+        this.dureeJours = dureeJours;
+    }
+
+    public String getTypeDeVoyage() {
+        return typeDeVoyage;
+    }
+
+    public void setTypeDeVoyage(String typeDeVoyage) {
+        this.typeDeVoyage = typeDeVoyage;
+    }
+
+    public String getActivitesIncluses() {
+        return activitesIncluses;
+    }
+
+    public void setActivitesIncluses(String activitesIncluses) {
+        this.activitesIncluses = activitesIncluses;
+    }
+
+    public List<DateVoyage> getDateVoyages() {
+        return dateVoyages;
+    }
+
+    public void setDateVoyages(List<DateVoyage> dateVoyages) {
+        this.dateVoyages = dateVoyages;
+    }
+
+    public void ajouterDateVoyage(DateVoyage dateVoyage) {
+        this.dateVoyages.add(dateVoyage);
     }
 }
