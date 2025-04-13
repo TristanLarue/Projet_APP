@@ -9,7 +9,7 @@
         android:id="@+id/destinationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Destination"
+        android:text="@string/destination"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -17,6 +17,6 @@
         android:id="@+id/prixTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Prix"
+        android:text="@string/prix"
         android:textSize="16sp" />
 </LinearLayout>
