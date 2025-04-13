@@ -1,4 +1,5 @@
 package com.example.projetsession.activities;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +22,9 @@ public class InscriptionActivity extends AppCompatActivity {
         EditText emailEdit = findViewById(R.id.emailEdit);
         EditText passwordEdit = findViewById(R.id.passwordEdit);
         Button signupButton = findViewById(R.id.signupButton);
+        Button backButton = findViewById(R.id.backButton);
         UtilisateurDAO utilisateurDAO = new UtilisateurDAO(this);
+
         signupButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -48,6 +51,11 @@ public class InscriptionActivity extends AppCompatActivity {
                     Toast.makeText(InscriptionActivity.this, "Erreur inscription", Toast.LENGTH_SHORT).show();
                 }
             }
+        });
+
+        backButton.setOnClickListener(v -> {
+            Intent intent = new Intent(InscriptionActivity.this, ConnexionActivity.class);
+            startActivity(intent);
         });
     }
 }

@@ -46,6 +46,7 @@
     <string name="retirer_un_item">Retirer un item</string>
     <string name="resume_du_voyage">Résumé du voyage</string>
     <string name="montant">Montant payé: 0$</string>
+    <string name="retour">Retour</string>
 
 
 </resources>
