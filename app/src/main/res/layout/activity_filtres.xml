@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:max="2000"
-                android:progress="150"
+                android:progress="2000"
                 android:thumbTint="#2C3E50"
                 android:progressTint="#2C3E50"
                 android:secondaryProgressTint="#D3D3D3" />

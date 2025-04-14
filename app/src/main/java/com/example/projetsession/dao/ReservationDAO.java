@@ -29,22 +29,16 @@ public class ReservationDAO {
     public boolean effectuerReservation(int utilisateurId, int voyageId, int dateVoyageId, int nbPlaces, double prixUnitaire) {
         List<DateVoyage> dateVoyages = dateVoyageDAO.getDateVoyagesPourVoyage(voyageId);
         DateVoyage selectedDate = null;
-
         for (DateVoyage dv : dateVoyages) {
             if (dv.getId() == dateVoyageId) {
                 selectedDate = dv;
                 break;
             }
         }
-
-        if (selectedDate == null || selectedDate.getNbPlacesDisponibles() < nbPlaces) {
-            return false;
-        }
-
+        if (selectedDate == null || selectedDate.getNbPlacesDisponibles() < nbPlaces) return false;
         double montantTotal = prixUnitaire * nbPlaces;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String dateReservation = dateFormat.format(new Date());
-
         Reservation reservation = new Reservation();
         reservation.setUtilisateurId(utilisateurId);
         reservation.setVoyageId(voyageId);
@@ -53,15 +47,12 @@ public class ReservationDAO {
         reservation.setMontantTotal(montantTotal);
         reservation.setStatut("confirmée");
         reservation.setDateReservation(dateReservation);
-
         long result = dbHelper.ajouterReservation(reservation);
-
         if (result > 0) {
             int nouveauNbPlaces = selectedDate.getNbPlacesDisponibles() - nbPlaces;
             dateVoyageDAO.mettreAJourPlacesDisponibles(dateVoyageId, nouveauNbPlaces);
             return true;
         }
-
         return false;
     }
 
@@ -74,12 +65,10 @@ public class ReservationDAO {
                     break;
                 }
             }
-
             if (dateVoyage != null) {
                 int nouveauNbPlaces = dateVoyage.getNbPlacesDisponibles() + nbPlaces;
                 dateVoyageDAO.mettreAJourPlacesDisponibles(dateVoyageId, nouveauNbPlaces);
             }
-
             dbHelper.updateReservationStatut(reservationId, "annulée");
             return true;
         } catch (Exception e) {

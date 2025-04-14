@@ -13,10 +13,9 @@ import com.example.projetsession.modeles.Voyage;
 import java.util.List;
 
 public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.ViewHolder> {
-
     private List<Reservation> reservationList;
     private OnCancelClickListener cancelClickListener;
-    private VoyageDAO voyageDAO; // Pour récupérer les infos du voyage
+    private VoyageDAO voyageDAO;
 
     public interface OnCancelClickListener {
         void onCancelClick(Reservation reservation);
@@ -48,7 +47,6 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Reservation reservation = reservationList.get(position);
-        // Récupérer la destination à partir du VoyageDAO
         String destination = "N/A";
         if (voyageDAO != null) {
             Voyage voyage = voyageDAO.getVoyageParId(reservation.getVoyageId());
@@ -56,7 +54,6 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
                 destination = voyage.getDestination();
             }
         }
-        // Afficher le nom de la destination et le prix avec le nombre de places
         holder.destinationTextView.setText("Destination: " + destination);
         holder.dateVoyageTextView.setText("Date: " + reservation.getDateReservation());
         holder.montantText.setText("Prix: " + reservation.getMontantTotal() + "$ (" + reservation.getNbPlaces() + " places)");
@@ -76,6 +73,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView destinationTextView, dateVoyageTextView, montantText, statutTextView;
         Button cancelButton;
+
         public ViewHolder(View itemView) {
             super(itemView);
             destinationTextView = itemView.findViewById(R.id.destinationTextView);

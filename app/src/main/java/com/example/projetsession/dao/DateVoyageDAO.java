@@ -6,20 +6,16 @@ import java.util.List;
 
 public class DateVoyageDAO {
     private DatabaseHelper dbHelper;
-
-    public DateVoyageDAO(Context context) {
-        dbHelper = new DatabaseHelper(context);
+    public DateVoyageDAO(Context context){
+        dbHelper=new DatabaseHelper(context);
     }
-
-    public long insererDateVoyage(DateVoyage dateVoyage) {
+    public long insererDateVoyage(DateVoyage dateVoyage){
         return dbHelper.ajouterDateVoyage(dateVoyage);
     }
-
-    public List<DateVoyage> getDateVoyagesPourVoyage(int voyageId) {
+    public List<DateVoyage> getDateVoyagesPourVoyage(int voyageId){
         return dbHelper.getDateVoyagesByVoyageId(voyageId);
     }
-
-    public void mettreAJourPlacesDisponibles(int dateVoyageId, int nbPlaces) {
-        dbHelper.updateNbPlacesDisponibles(dateVoyageId, nbPlaces);
+    public void mettreAJourPlacesDisponibles(int dateVoyageId,int nbPlaces){
+        dbHelper.updateNbPlacesDisponibles(dateVoyageId,nbPlaces);
     }
 }

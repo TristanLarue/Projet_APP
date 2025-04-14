@@ -14,7 +14,7 @@ import com.example.projetsession.modeles.Utilisateur;
 
 public class ConnexionActivity extends AppCompatActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connexion);
         EditText emailEdit = findViewById(R.id.emailEdit);
@@ -22,14 +22,13 @@ public class ConnexionActivity extends AppCompatActivity {
         Button loginButton = findViewById(R.id.loginButton);
         TextView signUpText = findViewById(R.id.signUpText);
         UtilisateurDAO utilisateurDAO = new UtilisateurDAO(this);
-
-        loginButton.setOnClickListener(new View.OnClickListener(){
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 String email = emailEdit.getText().toString().trim();
                 String mdp = passwordEdit.getText().toString().trim();
                 Utilisateur u = utilisateurDAO.verifierConnexion(email, mdp);
-                if(u != null){
+                if(u != null) {
                     Toast.makeText(ConnexionActivity.this, "Connexion bonne", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ConnexionActivity.this, AccueilActivity.class);
                     intent.putExtra("user_id", u.getId());
@@ -40,10 +39,9 @@ public class ConnexionActivity extends AppCompatActivity {
                 }
             }
         });
-
-        signUpText.setOnClickListener(new View.OnClickListener(){
+        signUpText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 startActivity(new Intent(ConnexionActivity.this, InscriptionActivity.class));
             }
         });

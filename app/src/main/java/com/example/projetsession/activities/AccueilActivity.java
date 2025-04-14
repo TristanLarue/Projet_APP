@@ -35,58 +35,49 @@ public class AccueilActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil);
-        // Récupérer l'identifiant de l'utilisateur depuis ConnexionActivity
         userId = getIntent().getIntExtra("user_id", -1);
-        // Initialiser les données (si ce n'est pas déjà fait)
         new DataInitializer(this).initializeData();
         searchEdit = findViewById(R.id.searchEdit);
         recyclerView = findViewById(R.id.destinationRecyclerView);
         Button filtersButton = findViewById(R.id.filtersButton);
         Button historyButton = findViewById(R.id.historyButton);
-
         voyageDAO = new VoyageDAO(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         loadVoyages();
-
-        searchEdit.addTextChangedListener(new TextWatcher(){
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count){}
-            @Override public void afterTextChanged(Editable s){ loadVoyages(); }
+        searchEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                loadVoyages();
+            }
         });
-        filtersButton.setOnClickListener(v ->
-                startActivityForResult(new Intent(AccueilActivity.this, FiltreActivity.class), REQUEST_FILTERS)
-        );
+        filtersButton.setOnClickListener(v -> startActivityForResult(new Intent(AccueilActivity.this, FiltreActivity.class), REQUEST_FILTERS));
         historyButton.setOnClickListener(v -> {
             Intent intent = new Intent(AccueilActivity.this, HistoriqueActivity.class);
             intent.putExtra("user_id", userId);
             startActivity(intent);
         });
-
     }
 
-    private void loadVoyages(){
+    private void loadVoyages() {
         String destinationSearch = searchEdit.getText().toString().trim();
-        List<Voyage> voyages = voyageDAO.rechercherVoyages(
-                !destinationFilter.isEmpty() ? destinationFilter : destinationSearch,
-                "",
-                budgetMax,
-                departureDate
-        );
-        // Groupement par nom de voyage pour n'avoir qu'une seule case par voyage
+        List<Voyage> voyages = voyageDAO.rechercherVoyages(!destinationFilter.isEmpty() ? destinationFilter : destinationSearch, "", budgetMax, departureDate);
         Map<String, Voyage> groupedByName = new HashMap<>();
         for (Voyage v : voyages) {
             String name = v.getNomVoyage();
-            if (!groupedByName.containsKey(name)) {
+            if (!groupedByName.containsKey(name))
                 groupedByName.put(name, v);
-            }
         }
         List<Voyage> uniqueVoyages = new ArrayList<>(groupedByName.values());
-        if(adapter == null){
+        if (adapter == null) {
             adapter = new VoyageAdapter(uniqueVoyages);
             adapter.setOnItemClickListener(voyage -> {
                 Intent intent = new Intent(AccueilActivity.this, VoyageActivity.class);
                 intent.putExtra("voyage_id", voyage.getId());
-                intent.putExtra("user_id", userId); // si applicable
+                intent.putExtra("user_id", userId);
                 startActivity(intent);
             });
             recyclerView.setAdapter(adapter);
@@ -95,13 +86,16 @@ public class AccueilActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_FILTERS && resultCode == Activity.RESULT_OK && data != null){
+        if (requestCode == REQUEST_FILTERS && resultCode == Activity.RESULT_OK && data != null) {
             destinationFilter = data.getStringExtra("destination_filter");
+            if ("Toutes les destinations".equals(destinationFilter))
+                destinationFilter = "";
             budgetMax = data.getDoubleExtra("budget_max", 0);
             departureDate = data.getStringExtra("departure_date");
+            if ("Toutes les dates".equals(departureDate))
+                departureDate = "";
             loadVoyages();
         }
         super.onActivityResult(requestCode, resultCode, data);

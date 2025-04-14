@@ -1,4 +1,5 @@
 package com.example.projetsession.dao;
+
 import android.content.Context;
 import android.util.Log;
 import com.example.projetsession.modeles.DateVoyage;
@@ -10,18 +11,21 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+
 public class DataInitializer {
     private Context context;
     private VoyageDAO voyageDAO;
     private DateVoyageDAO dateVoyageDAO;
     private UtilisateurDAO utilisateurDAO;
     private static final String TAG = "DataInitializer";
+
     public DataInitializer(Context context) {
         this.context = context;
         voyageDAO = new VoyageDAO(context);
         dateVoyageDAO = new DateVoyageDAO(context);
         utilisateurDAO = new UtilisateurDAO(context);
     }
+
     public void initializeData() {
         String json = loadJSONFromAsset();
         if (json != null) {
@@ -31,7 +35,6 @@ public class DataInitializer {
                 for (int i = 0; i < voyagesArray.length(); i++) {
                     JSONObject voyageObj = voyagesArray.getJSONObject(i);
                     Voyage voyage = new Voyage();
-                    // Do not set the id; let SQLite auto-generate a unique primary key.
                     voyage.setNomVoyage(voyageObj.getString("nom_voyage"));
                     voyage.setDescription(voyageObj.getString("description"));
                     voyage.setPrix(voyageObj.getDouble("prix"));
@@ -59,7 +62,6 @@ public class DataInitializer {
                         String email = clientObj.getString("email").trim();
                         if (utilisateurDAO.getUtilisateurParEmail(email) == null) {
                             Utilisateur utilisateur = new Utilisateur();
-                            // Let SQLite auto-generate the id for the client.
                             utilisateur.setNom(clientObj.getString("nom"));
                             utilisateur.setPrenom(clientObj.getString("prenom"));
                             utilisateur.setEmail(email);
@@ -82,6 +84,7 @@ public class DataInitializer {
             Log.e(TAG, "voyages.json not loaded!");
         }
     }
+
     private String loadJSONFromAsset() {
         String json = null;
         try {
